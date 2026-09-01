@@ -78,10 +78,6 @@ export function addClient(client: ClientConfig): void {
 }
 
 export function updateClient(client: ClientConfig): void {
-  if (isProtectedClient(client.id)) {
-    throw new Error('The protected demo client cannot be updated through this operation.');
-  }
-
   const stored = loadFromStorage();
   const idx = stored.findIndex((c) => c.id === client.id);
   if (idx === -1) {
