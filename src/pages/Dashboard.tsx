@@ -19,9 +19,13 @@ export default function Dashboard({ navigate }: { navigate: (to: string) => void
 
   const handleDelete = () => {
     if (!deleteTarget) return;
-    deleteClient(deleteTarget.id);
-    setDeleteTarget(null);
-    refresh();
+    try {
+      deleteClient(deleteTarget.id);
+      setDeleteTarget(null);
+      refresh();
+    } catch {
+      setDeleteTarget(null);
+    }
   };
 
   return (
@@ -75,17 +79,12 @@ export default function Dashboard({ navigate }: { navigate: (to: string) => void
             <div className="col-span-9 md:col-span-1 text-right">Actions</div>
           </div>
           {summaries.length === 0 ? (
-            <div className="px-6 py-12 text-center text-white/40 text-sm">
-              No demos configured yet.
-            </div>
+            <div className="px-6 py-12 text-center text-white/40 text-sm">No demos configured yet.</div>
           ) : (
             summaries.map((s) => {
               const protectedClient = isProtectedClient(s.id);
               return (
-                <div
-                  key={s.id}
-                  className="grid grid-cols-12 gap-4 px-6 py-4 border-t border-white/5 items-center hover:bg-white/[0.03] transition-colors"
-                >
+                <div key={s.id} className="grid grid-cols-12 gap-4 px-6 py-4 border-t border-white/5 items-center hover:bg-white/[0.03] transition-colors">
                   <div className="col-span-3 font-medium text-sm">
                     {s.businessName}
                     {protectedClient && (
@@ -93,12 +92,8 @@ export default function Dashboard({ navigate }: { navigate: (to: string) => void
                     )}
                   </div>
                   <div className="col-span-2 hidden md:block text-sm text-white/60">{s.industry}</div>
-                  <div className="col-span-2 hidden md:block text-sm text-white/60">
-                    {templateLabels[s.template]}
-                  </div>
-                  <div className="col-span-2 hidden md:block text-sm text-white/40 font-mono">
-                    /{s.slug}
-                  </div>
+                  <div className="col-span-2 hidden md:block text-sm text-white/60">{templateLabels[s.template]}</div>
+                  <div className="col-span-2 hidden md:block text-sm text-white/40 font-mono">/{s.slug}</div>
                   <div className="col-span-2 hidden md:block">
                     <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full bg-emerald-500/15 text-emerald-400">
                       <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
@@ -107,26 +102,16 @@ export default function Dashboard({ navigate }: { navigate: (to: string) => void
                   </div>
                   <div className="col-span-9 md:col-span-1 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <button
-                        onClick={() => navigate(`/${s.slug}`)}
-                        title="Open Demo"
-                        className="p-2 rounded-lg hover:bg-white/10 text-sky-400 transition-colors"
-                      >
+                      <button onClick={() => navigate(`/${s.slug}`)} title="Open Demo" className="p-2 rounded-lg hover:bg-white/10 text-sky-400 transition-colors">
                         <ExternalLink size={16} />
                       </button>
-                      <button
-                        onClick={() => navigate(`/dashboard/edit/${s.slug}`)}
-                        title="Edit"
-                        className="p-2 rounded-lg hover:bg-white/10 text-white/60 transition-colors"
-                      >
-                        <Pencil size={16} />
-                      </button>
                       {!protectedClient && (
-                        <button
-                          onClick={() => setDeleteTarget({ id: s.id, name: s.businessName, slug: s.slug })}
-                          title="Delete"
-                          className="p-2 rounded-lg hover:bg-red-500/10 text-red-400 transition-colors"
-                        >
+                        <button onClick={() => navigate(`/dashboard/edit/${s.slug}`)} title="Edit" className="p-2 rounded-lg hover:bg-white/10 text-white/60 transition-colors">
+                          <Pencil size={16} />
+                        </button>
+                      )}
+                      {!protectedClient && (
+                        <button onClick={() => setDeleteTarget({ id: s.id, name: s.businessName, slug: s.slug })} title="Delete" className="p-2 rounded-lg hover:bg-red-500/10 text-red-400 transition-colors">
                           <Trash2 size={16} />
                         </button>
                       )}
@@ -144,46 +129,26 @@ export default function Dashboard({ navigate }: { navigate: (to: string) => void
             <li>• Each client demo is defined by a configuration object, not separate code.</li>
             <li>• The <span className="text-sky-400">template</span> field selects which visual layout renders.</li>
             <li>• Brand colors, fonts, and all content come from the configuration.</li>
-            <li>• Created demos are saved locally and survive page refresh.</li>
+            <li>• Created demos are saved locally for dashboard management.</li>
+            <li>• Shared demo links contain the configuration and work on other devices.</li>
           </ul>
         </div>
       </main>
 
-      {/* Delete confirmation modal */}
       {deleteTarget && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-          onClick={() => setDeleteTarget(null)}
-        >
-          <div
-            className="max-w-sm w-full mx-6 rounded-2xl border border-white/10 bg-[#12121a] p-6"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm" onClick={() => setDeleteTarget(null)}>
+          <div className="max-w-sm w-full mx-6 rounded-2xl border border-white/10 bg-[#12121a] p-6" onClick={(e) => e.stopPropagation()}>
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-bold">Delete Demo</h3>
-              <button
-                onClick={() => setDeleteTarget(null)}
-                className="p-1 rounded-lg hover:bg-white/10 text-white/60 transition-colors"
-              >
-                <X size={20} />
-              </button>
+              <button onClick={() => setDeleteTarget(null)} className="p-1 rounded-lg hover:bg-white/10 text-white/60 transition-colors"><X size={20} /></button>
             </div>
             <p className="text-sm text-white/50 mb-6">
               Are you sure you want to delete <span className="text-white/80 font-medium">{deleteTarget.name}</span>? This cannot be undone.
             </p>
             <div className="flex items-center justify-end gap-3">
-              <button
-                onClick={() => setDeleteTarget(null)}
-                className="px-4 py-2.5 rounded-xl text-sm font-medium text-white/60 hover:text-white transition-colors"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDelete}
-                className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-400 text-white font-semibold text-sm transition-colors"
-              >
-                <Trash2 size={16} />
-                Delete
+              <button onClick={() => setDeleteTarget(null)} className="px-4 py-2.5 rounded-xl text-sm font-medium text-white/60 hover:text-white transition-colors">Cancel</button>
+              <button onClick={handleDelete} className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-red-500 hover:bg-red-400 text-white font-semibold text-sm transition-colors">
+                <Trash2 size={16} /> Delete
               </button>
             </div>
           </div>
