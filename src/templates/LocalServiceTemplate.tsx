@@ -8,6 +8,7 @@ import Features from '@/components/Features';
 import CTA from '@/components/CTA';
 import Contact from '@/components/Contact';
 import Footer from '@/components/Footer';
+import LongFormSections from '@/components/LongFormSections';
 
 export default function LocalServiceTemplate({ client }: { client: ClientConfig }) {
   return (
@@ -15,6 +16,7 @@ export default function LocalServiceTemplate({ client }: { client: ClientConfig 
       <Navbar client={client} />
       <main>
         <Hero client={client} />
+        <LongFormSections client={client} />
         <Services client={client} />
         <About client={client} />
         <Features client={client} />
