@@ -4,7 +4,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* ===== Root defaults (overridden by client theme) ===== */
 :root {
   --brand-primary: #1a1a2e;
   --brand-secondary: #16213e;
@@ -20,37 +19,18 @@
   --brand-muted-rgb: 160 160 176;
   --brand-accent-soft: rgba(201, 162, 39, 0.15);
   --brand-accent-border: rgba(201, 162, 39, 0.4);
-
   --font-heading: 'Playfair Display', Georgia, serif;
   --font-body: 'Inter', system-ui, sans-serif;
 }
 
-/* ===== Font style presets ===== */
-[data-font='serif'] {
-  --font-heading: 'Playfair Display', Georgia, serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-}
-[data-font='sans'] {
-  --font-heading: 'Inter', system-ui, sans-serif;
-  --font-body: 'Inter', system-ui, sans-serif;
-}
-[data-font='modern'] {
-  --font-heading: 'Space Grotesk', system-ui, sans-serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
-}
-[data-font='editorial'] {
-  --font-heading: 'Playfair Display', Georgia, serif;
-  --font-body: 'DM Sans', system-ui, sans-serif;
-}
+[data-font='serif'] { --font-heading: 'Playfair Display', Georgia, serif; --font-body: 'Inter', system-ui, sans-serif; }
+[data-font='sans'] { --font-heading: 'Inter', system-ui, sans-serif; --font-body: 'Inter', system-ui, sans-serif; }
+[data-font='modern'] { --font-heading: 'Space Grotesk', system-ui, sans-serif; --font-body: 'DM Sans', system-ui, sans-serif; }
+[data-font='editorial'] { --font-heading: 'Playfair Display', Georgia, serif; --font-body: 'DM Sans', system-ui, sans-serif; }
 
-/* ===== Base ===== */
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
 
 body {
   margin: 0;
@@ -61,140 +41,57 @@ body {
   color: #fff;
 }
 
+::selection { background: rgba(var(--brand-accent-rgb), .28); color: var(--brand-text); }
+
+a { color: inherit; text-decoration: none; }
+
+button, a { -webkit-tap-highlight-color: transparent; }
+
 .client-site {
   background: var(--brand-background);
   color: var(--brand-text);
   font-family: var(--font-body);
   min-height: 100vh;
+  overflow-x: clip;
 }
 
-.client-site h1,
-.client-site h2,
-.client-site h3,
-.client-site h4 {
-  font-family: var(--font-heading);
-}
+.client-site h1, .client-site h2, .client-site h3, .client-site h4 { font-family: var(--font-heading); }
 
-/* ===== Layout helpers ===== */
-.container-base {
-  width: 100%;
-  max-width: 1280px;
-  margin: 0 auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
-}
+.client-site a:focus-visible, .client-site button:focus-visible { outline: 2px solid var(--brand-accent); outline-offset: 4px; }
 
-@media (min-width: 768px) {
-  .container-base {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-}
+.container-base { width: 100%; max-width: 1280px; margin: 0 auto; padding-left: 1.5rem; padding-right: 1.5rem; }
+@media (min-width: 768px) { .container-base { padding-left: 2rem; padding-right: 2rem; } }
+@media (min-width: 1024px) { .container-base { padding-left: 3rem; padding-right: 3rem; } }
 
-@media (min-width: 1024px) {
-  .container-base {
-    padding-left: 3rem;
-    padding-right: 3rem;
-  }
-}
+.section-base { width: 100%; overflow-x: hidden; }
 
-.section-base {
-  width: 100%;
-  overflow-x: hidden;
-}
+.template-luxury .container-base { max-width: 1200px; }
+.template-luxury { letter-spacing: .01em; }
+.template-photography .container-base { max-width: 1400px; }
+.template-photography .gallery-grid { gap: 2px; }
+.template-local-service .container-base { max-width: 1100px; }
+.template-restaurant .container-base { max-width: 1200px; }
+.template-professional .container-base { max-width: 1150px; }
 
-/* ===== Template-specific tweaks ===== */
-.template-luxury .container-base {
-  max-width: 1200px;
-}
-.template-luxury {
-  letter-spacing: 0.01em;
-}
+.longform-facts { backdrop-filter: blur(14px); }
+.longform-facts > div > div { min-width: 0; }
 
-.template-photography .container-base {
-  max-width: 1400px;
-}
-.template-photography .gallery-grid {
-  gap: 2px;
-}
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scrollLine { 0% { transform: scaleY(0); transform-origin: top; } 50% { transform: scaleY(1); transform-origin: top; } 51% { transform-origin: bottom; } 100% { transform: scaleY(0); transform-origin: bottom; } }
 
-.template-local-service .container-base {
-  max-width: 1100px;
-}
+.animate-fade-in-up { animation: fadeInUp .8s ease-out forwards; }
+.animate-scroll-line { animation: scrollLine 2s ease-in-out infinite; }
+.animation-delay-100 { animation-delay: .1s; opacity: 0; }
+.animation-delay-200 { animation-delay: .2s; opacity: 0; }
+.animation-delay-300 { animation-delay: .3s; opacity: 0; }
 
-.template-restaurant .container-base {
-  max-width: 1200px;
-}
+.client-site::-webkit-scrollbar { width: 8px; }
+.client-site::-webkit-scrollbar-track { background: var(--brand-background); }
+.client-site::-webkit-scrollbar-thumb { background: rgba(var(--brand-muted-rgb), .3); border-radius: 4px; }
 
-.template-professional .container-base {
-  max-width: 1150px;
-}
+img { max-width: 100%; height: auto; }
 
-/* ===== Animations ===== */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(24px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scrollLine {
-  0% {
-    transform: scaleY(0);
-    transform-origin: top;
-  }
-  50% {
-    transform: scaleY(1);
-    transform-origin: top;
-  }
-  51% {
-    transform-origin: bottom;
-  }
-  100% {
-    transform: scaleY(0);
-    transform-origin: bottom;
-  }
-}
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.8s ease-out forwards;
-}
-
-.animate-scroll-line {
-  animation: scrollLine 2s ease-in-out infinite;
-}
-
-.animation-delay-100 {
-  animation-delay: 0.1s;
-  opacity: 0;
-}
-.animation-delay-200 {
-  animation-delay: 0.2s;
-  opacity: 0;
-}
-.animation-delay-300 {
-  animation-delay: 0.3s;
-  opacity: 0;
-}
-
-/* ===== Scrollbar ===== */
-.client-site::-webkit-scrollbar {
-  width: 8px;
-}
-.client-site::-webkit-scrollbar-track {
-  background: var(--brand-background);
-}
-.client-site::-webkit-scrollbar-thumb {
-  background: rgba(var(--brand-muted-rgb), 0.3);
-  border-radius: 4px;
-}
-
-/* ===== Image safety ===== */
-img {
-  max-width: 100%;
-  height: auto;
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
 }
